@@ -16,12 +16,11 @@ Connect servo 1 on pin 33 and servo 2 on pin 19.
 var servo = require("./odroid-servo");
 
 servo.init();
-servo.readDuty(function(value){console.log(value)})
 
-servo.center(); // center the servo (50% postion)
-servo.move(0); // move extreme left to (0% position)
-servo.move(100); // move extreme right to (100% position)
-servo.move(30);
+servo.center(1); // center the servo 1 (50% postion)
+servo.move(1, 0); // move servo 1 to extreme left to (0% position)
+servo.move(1, 100); // move servo 1 to extreme right to (100% position)
+servo.move(2, 30); // move servo 2 to 30%
 ```
 
 Refs:

@@ -11,14 +11,6 @@ var MAX_DUTY = 110;
 var SYSFSPATH = "/sys/devices/platform/pwm-ctrl/";
 
 
-var board = fs.readFileSync("/proc/cpuinfo").toString().split("\n").filter(function(line) {
-	return line.indexOf("Hardware") == 0;
-})[0].split(":")[1].trim();
-
-if (board !== 'ODROIDC'){
-	console.log("This board is not an Odroid-C1, problems might occur.");
-}
-
 function isNumber(number) {
 	return !isNaN(parseInt(number, 10));
 }
@@ -54,45 +46,45 @@ var servo = {
 			if (err) return (callback || noop)(err);
 		}));
 
-		servo.setFrequency(50);
+		servo.setFrequency(1, 50);
+		servo.setFrequency(2, 50);
 
 	},
 
-	setFrequency: function(freq, callback) {
-		fs.writeFile(SYSFSPATH + "freq0", freq, (callback || noop));
+	setFrequency: function(servoNumber, freq, callback) {
+		fs.writeFile(SYSFSPATH + "freq" + String(servoNumber - 1), freq, (callback || noop));
 	},
 
-	setDuty: function(duty, callback) {
-		fs.writeFile(SYSFSPATH + "duty0", duty, (callback || noop));
+	setDuty: function(servoNumber, duty, callback) {
+		fs.writeFile(SYSFSPATH + "duty" + String(servoNumber - 1), duty, (callback || noop));
 	},
 
-	enable: function(callback) {
-		fs.writeFile(SYSFSPATH + "enable0", 1, (callback || noop));
+	enable: function(servoNumber, callback) {
+		fs.writeFile(SYSFSPATH + "enable" + String(servoNumber - 1), 1, (callback || noop));
 	},
 
-	disable: function(callback) {
-		fs.writeFile(SYSFSPATH + "enable0", 0, (callback || noop));
+	disable: function(servoNumber, callback) {
+		fs.writeFile(SYSFSPATH + "enable" + String(servoNumber - 1), 0, (callback || noop));
 	},
 
-	move: function(value, callback) {
+	move: function(servoNumber, value, raw, callback) {
 		new Promise(function(resolve, reject){
-			servo.enable();
-			var rot = fromPercent(value);
-			console.log(rot);
-			servo.setDuty(rot);
+			servo.enable(servoNumber, callback);
+			var rot = raw ? value : fromPercent(value);
+			servo.setDuty(servoNumber, rot, callback);
 			setTimeout(function(){ 
-				servo.disable();
+				servo.disable(servoNumber, callback);
 				resolve();
 			 }, 1000);
 		});
 	},
 
-	center: function(callback) {
-		servo.move(50);
+	center: function(servoNumber, callback) {
+		servo.move(servoNumber, 50, callback);
 	},	
 
-	readDuty: function(callback) {
-		fs.readFile(SYSFSPATH + "duty0", "utf-8", function(err, data) {
+	readDuty: function(servoNumber, callback) {
+		fs.readFile(SYSFSPATH + "duty" + String(servoNumber - 1), "utf-8", function(err, data) {
 			if (err) return (callback || noop)(err);
 			return parseInt(data, 10)
 		});
