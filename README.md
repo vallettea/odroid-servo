@@ -13,7 +13,7 @@ sudo apt-get update && sudo apt-get install fix-w1-blacklist
 Connect servo 1 on pin 33 and servo 2 on pin 19.
 
 ```javascript
-var servo = require("./odroid-servo");
+var servo = require("odroid-servo");
 
 servo.init();
 
