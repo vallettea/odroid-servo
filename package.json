@@ -1,0 +1,27 @@
+{
+  "author": "Alexandre Vallette <vallettea@gmail.com>",
+  "name": "odroid-servo",
+  "description": "A simple node.js-based servo helper for the Odroid c1",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:vallettea/odroid-servo.git"
+  },
+  "homepage": "https://github.com/vallettea/odroid-servo",
+  "main": "./odroid-servo",
+  "bugs": {
+    "url": "https://github.com/vallettea/odroid-servo/issues"
+  },
+  "tags": [
+    "odroid",
+    "servo",
+    "simple"
+  ],
+  "dependencies": {
+    "es-env-polyfills": "^1.0.0"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": "*"
+  }
+}
